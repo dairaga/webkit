@@ -1,0 +1,4 @@
+[server]
+host=":8080"
+wait="300s"
+version="0.1"

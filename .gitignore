@@ -1,0 +1,13 @@
+other
+.DS_Store
+.vscode
+*.wav
+vendor
+*.lock
+*.a
+*.o
+*.bin
+*.txt
+*.log
+*.pb.go
+*_pb_test.go

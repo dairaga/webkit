@@ -1,0 +1,10 @@
+# test
+SUB         /adm
+GET         /employee           showEmployee(w, r)
+GET         /employee/add       showAddEmployee(w, r)   
+POST        /employee/add       doAddEmployee(w, r)
+GET         /employee/block/{id:[0-9]+}     showBlockEmployee(w, r, id)
+
+#
+
+GET         /assests/*file          files(id)
