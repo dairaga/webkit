@@ -170,8 +170,8 @@ func _mkHandleFunc(f interface{}, params ...string) http.HandlerFunc {
 	}
 
 	if typ.NumIn() > 2+len(params) {
-		if !_isPtrOfStruct(typ.In(typ.NumIn() - 1)) {
-			panic("last parameter of func must be pointer of struct")
+		if !_isPtrOfStruct(typ.In(typ.NumIn()-1)) && !_isByteSlice(typ.In(typ.NumIn()-1)) {
+			panic("last parameter of func must be pointer of struct or slice of byte")
 		}
 	}
 
