@@ -86,6 +86,11 @@ func NotFound(data interface{}, tmpls ...string) Result {
 	return Custom(http.StatusNotFound, data, tmpls...)
 }
 
+// Conflict (409)
+func Conflict(data interface{}, tmpls ...string) Result {
+	return Custom(http.StatusConflict, data, tmpls...)
+}
+
 // Fault (500)
 func Fault(data interface{}, tmpls ...string) Result {
 	return Custom(http.StatusInternalServerError, data, tmpls...)
