@@ -1,6 +1,7 @@
 package webkit
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -44,4 +45,22 @@ func Use(prefix string, filters ...Filter) *mux.Router {
 // Router returns inside router.
 func Router() *mux.Router {
 	return _router
+}
+
+// Start run as http server.
+func Start(host ...string) error {
+	if len(host) <= 0 || host[0] == "" {
+		return http.ListenAndServe(":80", _router)
+	}
+
+	return http.ListenAndServe(host[0], _router)
+}
+
+// StartSecure run as https.
+func StartSecure(cert, key string, host ...string) error {
+	if len(host) <= 0 || host[0] == "" {
+		return http.ListenAndServeTLS(":443", cert, key, _router)
+	}
+
+	return http.ListenAndServeTLS(host[0], cert, key, _router)
 }
