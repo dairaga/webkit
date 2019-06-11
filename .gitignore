@@ -11,3 +11,4 @@ vendor
 *.log
 *.pb.go
 *_pb_test.go
+go.sum
