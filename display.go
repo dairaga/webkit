@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"reflect"
+	"strings"
 
 	"github.com/dairaga/config"
 	"github.com/dairaga/log"
@@ -239,7 +240,8 @@ func Display(w http.ResponseWriter, result Result) {
 		w.WriteHeader(result.Code())
 		return
 	}
-
+	ctype := w.Header().Get("Content-Type")
+	newType := ""
 	var databytes []byte
 	var err error
 	switch v := data.(type) {
@@ -247,19 +249,34 @@ func Display(w http.ResponseWriter, result Result) {
 		databytes = []byte(v)
 	case []byte:
 		databytes = v
+		newType = "application/octet-stream"
 	case proto.Message:
-		if databytes, err = proto.Marshal(v); err != nil {
-			log.Error("resp proto marshal: ", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
+		if strings.HasPrefix(ctype, "application/json") {
+			if databytes, err = json.Marshal(v); err != nil {
+				log.Error("resp json marshal: ", err)
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			newType = "application/json;charset=utf-8"
+		} else {
+			if databytes, err = proto.Marshal(v); err != nil {
+				log.Error("resp proto marshal: ", err)
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			newType = "application/octet-stream"
 		}
+
 	default:
 		if databytes, err = json.Marshal(v); err != nil {
 			log.Error("resp json marshal: ", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		w.Header().Set("Content-Type", "application/json;charset=utf-8")
+		newType = "application/json;charset=utf-8"
+	}
+	if ctype == "" && newType != "" {
+		w.Header().Set("Content-Type", newType)
 	}
 
 	w.WriteHeader(result.Code())
