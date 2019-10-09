@@ -180,6 +180,8 @@ func _mkHandleFunc(f interface{}, params ...string) http.HandlerFunc {
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Debugf("remote: %s, method: %s, url: %s", r.RemoteAddr, r.Method, r.URL)
+
 		vars := mux.Vars(r)
 		vals := []reflect.Value{reflect.ValueOf(w), reflect.ValueOf(r)}
 		for i, x := range params {
